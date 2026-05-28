@@ -1,9 +1,6 @@
-# Spot-Check
-SpotCheck is my personal digital notebook for tracking the food I eat and the places I visit. No influencer hype or conflicting crowdsourced reviews—just my genuine, unfiltered thoughts on everyday spots. If I've been there, it gets a SpotCheck.
-
 # SpotCheck 📍
 
-> My Personal Review Journal.
+> **[Live Site → kv-spotcheck.vercel.app](https://kv-spotcheck.vercel.app)**
 
 **SpotCheck** is my personal digital notebook for tracking the food I eat and the places I visit. No influencer hype or conflicting crowdsourced reviews—just my genuine, unfiltered thoughts on everyday spots. If I've been there, it gets a SpotCheck.
 
@@ -20,11 +17,16 @@ This repository contains the source code for my personal review website. Built a
 - **Clean UI:** Optimized for quick reading and navigation.
 - **Personal Categories:** Filterable logs for both food joints and physical spaces.
 - **No-Nonsense Ratings:** Honest, unfiltered verdicts based entirely on firsthand experience.
+- **Password-Protected Admin Panel:** Create, import, and manage reviews.
+- **Google Takeout Import:** Bulk-import reviews from Google Maps via GeoJSON.
+- **S3-Ready Storage:** Optional AWS S3 integration for images and data persistence.
 
 ## 🛠️ Built With
 
-* [Your Framework - e.g., Next.js / Astro / HTML & CSS]
-* [Your Styling - e.g., Tailwind CSS]
+* **Next.js 14** (App Router, TypeScript)
+* **Tailwind CSS** (warm food-journal aesthetic)
+* **AWS S3** (optional — for images & review storage)
+* **Vercel** (hosting)
 
 ## 📦 Getting Started
 
@@ -32,4 +34,4 @@ To get a local copy up and running, follow these simple steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/YOUR-USERNAME/SpotCheck.git](https://github.com/YOUR-USERNAME/SpotCheck.git)
+   git clone https://github.com/kuvaibhav/Spot-Check.git
