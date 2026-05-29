@@ -44,6 +44,7 @@ export interface Review {
   tags: string[];
   priceRange?: 1 | 2 | 3 | 4; // $ to $$$$
   wouldReturn: boolean;
+  googleMapsUrl?: string;
 }
 
 export interface ReviewsData {
@@ -51,7 +52,7 @@ export interface ReviewsData {
   lastUpdated: string;
 }
 
-// Google Takeout GeoJSON format
+// Google Takeout GeoJSON format (actual structure from export)
 export interface GoogleTakeoutFeature {
   type: "Feature";
   geometry: {
@@ -59,19 +60,19 @@ export interface GoogleTakeoutFeature {
     coordinates: [number, number]; // [lng, lat]
   };
   properties: {
-    "Google Maps URL"?: string;
-    Location?: {
-      "Business Name"?: string;
-      Address?: string;
-      "Country Code"?: string;
-      "Geo Coordinates"?: {
-        Latitude?: number;
-        Longitude?: number;
-      };
+    google_maps_url?: string;
+    date?: string;
+    five_star_rating_published?: number;
+    review_text_published?: string;
+    location?: {
+      name?: string;
+      address?: string;
+      country_code?: string;
     };
-    Published?: string;
-    "Star Rating"?: number;
-    "Review Comment"?: string;
+    questions?: {
+      question: string;
+      rating: number;
+    }[];
   };
 }
 

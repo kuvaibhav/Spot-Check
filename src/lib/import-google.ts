@@ -14,20 +14,33 @@ export function parseGoogleTakeoutReviews(
   geojson: GoogleTakeoutGeoJSON
 ): Review[] {
   return geojson.features
-    .filter((f) => f.properties?.["Star Rating"] != null)
+    .filter(
+      (f) =>
+        f.properties?.five_star_rating_published != null &&
+        f.properties.five_star_rating_published > 0
+    )
     .map((feature) => featureToReview(feature));
 }
 
 function featureToReview(feature: GoogleTakeoutFeature): Review {
   const props = feature.properties;
-  const location = props.Location;
-  const placeName = location?.["Business Name"] || "Unknown Place";
-  const address = location?.Address || "";
-  const rating = props["Star Rating"] || 3;
-  const reviewText = props["Review Comment"] || "";
-  const published = props.Published || new Date().toISOString();
+  const location = props.location;
+  const placeName = location?.name || "Unknown Place";
+  const address = location?.address || "";
+  const rating = props.five_star_rating_published || 3;
+  const reviewText = props.review_text_published || "";
+  const published = props.date || new Date().toISOString();
+  const googleMapsUrl = props.google_maps_url || "";
 
   const [lng, lat] = feature.geometry?.coordinates || [0, 0];
+
+  // Extract sub-ratings (Food, Service, Atmosphere) as tags
+  const tags: string[] = [];
+  if (props.questions) {
+    for (const q of props.questions) {
+      tags.push(`${q.question}: ${q.rating}/5`);
+    }
+  }
 
   return {
     id: uuidv4(),
@@ -42,8 +55,9 @@ function featureToReview(feature: GoogleTakeoutFeature): Review {
     images: [],
     coordinates: lat && lng ? { lat, lng } : undefined,
     source: "google",
-    tags: [],
+    tags,
     wouldReturn: rating >= 4,
+    googleMapsUrl,
   };
 }
 

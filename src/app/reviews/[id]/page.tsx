@@ -151,10 +151,13 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
         )}
 
         {/* Map link */}
-        {review.coordinates && (
+        {(review.googleMapsUrl || review.coordinates) && (
           <div className="mt-8 p-4 bg-stone-100 rounded-xl">
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${review.coordinates.lat},${review.coordinates.lng}`}
+              href={
+                review.googleMapsUrl ||
+                `https://www.google.com/maps/search/?api=1&query=${review.coordinates?.lat},${review.coordinates?.lng}`
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors"
