@@ -8,14 +8,15 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ReviewsData } from "./types";
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || "us-west-2",
+  region: "auto",
+  endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+    accessKeyId: process.env.R2_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || "",
   },
 });
 
-const BUCKET = process.env.S3_BUCKET_NAME || "spot-check-reviews";
+const BUCKET = process.env.R2_BUCKET_NAME || "spot-check-rw";
 const REVIEWS_KEY = "data/reviews.json";
 
 export async function getReviewsFromS3(): Promise<ReviewsData> {
@@ -61,7 +62,13 @@ export async function uploadImageToS3(
     ContentType: contentType,
   });
   await s3Client.send(command);
-  return `https://${BUCKET}.s3.${process.env.AWS_REGION || "us-west-2"}.amazonaws.com/images/${key}`;
+
+  const publicDomain = process.env.R2_PUBLIC_DOMAIN;
+  if (publicDomain) {
+    return `https://${publicDomain}/images/${key}`;
+  }
+  // Fallback until public access is enabled on the bucket
+  return `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com/${BUCKET}/images/${key}`;
 }
 
 export async function deleteImageFromS3(key: string): Promise<void> {

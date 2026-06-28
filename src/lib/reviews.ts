@@ -2,8 +2,8 @@ import { Review, ReviewsData, Category } from "./types";
 import sampleData from "@/data/sample-reviews.json";
 
 const USE_S3 = !!(
-  process.env.AWS_ACCESS_KEY_ID &&
-  process.env.AWS_ACCESS_KEY_ID !== "your-access-key-id"
+  process.env.R2_ACCESS_KEY_ID &&
+  process.env.R2_ACCESS_KEY_ID !== "your-r2-access-key"
 );
 
 export async function getReviews(): Promise<ReviewsData> {
