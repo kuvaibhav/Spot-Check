@@ -63,7 +63,9 @@ cp .env.example .env.local   # edit values as needed
 npm run dev
 ```
 
-The dev server starts at **http://localhost:3000**.
+The dev server starts at **http://localhost:3000** by default.
+
+> **Current session note:** During the June 28 2026 session, multiple `npm run dev` instances were started without fully killing prior ones. Ports 3000, 3001, and 3002 were occupied, so the server ended up on **http://localhost:3003**. If you see a 404 on 3000, check which port the server actually bound to in the terminal output.
 
 ### Common Port Conflict Issue
 
@@ -77,7 +79,7 @@ pkill -9 -f "next"
 npm run dev
 ```
 
-Or specify a port explicitly:
+Or specify a port explicitly to avoid the issue entirely:
 
 ```bash
 PORT=4000 npm run dev
