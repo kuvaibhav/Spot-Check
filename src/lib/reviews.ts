@@ -27,6 +27,7 @@ export function filterReviews(
   reviews: Review[],
   options: {
     category?: Category | "all";
+    city?: string;
     search?: string;
     sortBy?: "date" | "rating" | "name";
     sortOrder?: "asc" | "desc";
@@ -38,6 +39,10 @@ export function filterReviews(
     filtered = filtered.filter((r) => r.category === options.category);
   }
 
+  if (options.city && options.city !== "all") {
+    filtered = filtered.filter((r) => r.city === options.city);
+  }
+
   if (options.search) {
     const q = options.search.toLowerCase();
     filtered = filtered.filter(
@@ -45,6 +50,7 @@ export function filterReviews(
         r.placeName.toLowerCase().includes(q) ||
         r.reviewText.toLowerCase().includes(q) ||
         r.address.toLowerCase().includes(q) ||
+        (r.city ?? "").toLowerCase().includes(q) ||
         r.tags.some((t) => t.toLowerCase().includes(q))
     );
   }

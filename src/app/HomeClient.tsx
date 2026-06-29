@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReviewCard from "@/components/ReviewCard";
 import CategoryFilter from "@/components/CategoryFilter";
+import CityFilter from "@/components/CityFilter";
 import SearchBar from "@/components/SearchBar";
 import { SlidersHorizontal } from "lucide-react";
 
@@ -16,12 +17,24 @@ interface HomeClientProps {
 
 export default function HomeClient({ reviews }: HomeClientProps) {
   const [category, setCategory] = useState<Category | "all">("all");
+  const [city, setCity] = useState("all");
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "rating" | "name">("date");
 
+  // Build sorted city list with counts (exclude empty city values)
+  const cityOptions = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const r of reviews) {
+      if (r.city) counts[r.city] = (counts[r.city] ?? 0) + 1;
+    }
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([c, count]) => ({ city: c, count }));
+  }, [reviews]);
+
   const filtered = useMemo(
-    () => filterReviews(reviews, { category, search, sortBy, sortOrder: "desc" }),
-    [reviews, category, search, sortBy]
+    () => filterReviews(reviews, { category, city, search, sortBy, sortOrder: "desc" }),
+    [reviews, category, city, search, sortBy]
   );
 
   const stats = useMemo(() => {
@@ -75,17 +88,20 @@ export default function HomeClient({ reviews }: HomeClientProps) {
           <div className="w-full sm:w-72">
             <SearchBar value={search} onChange={setSearch} />
           </div>
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4 text-stone-400" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "date" | "rating" | "name")}
-              className="text-sm bg-white border border-stone-200 rounded-lg px-3 py-2 text-stone-600 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
-            >
-              <option value="date">Newest First</option>
-              <option value="rating">Highest Rated</option>
-              <option value="name">A — Z</option>
-            </select>
+          <div className="flex items-center gap-3 flex-wrap">
+            <CityFilter cities={cityOptions} selected={city} onChange={setCity} />
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal className="w-4 h-4 text-stone-400" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as "date" | "rating" | "name")}
+                className="text-sm bg-white border border-stone-200 rounded-lg px-3 py-2 text-stone-600 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+              >
+                <option value="date">Newest First</option>
+                <option value="rating">Highest Rated</option>
+                <option value="name">A — Z</option>
+              </select>
+            </div>
           </div>
         </div>
 

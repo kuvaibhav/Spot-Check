@@ -7,6 +7,19 @@ import {
 } from "./types";
 
 /**
+ * Extracts the city from a standard address string.
+ * Handles formats like "123 Main St, Seattle, WA 98101, United States"
+ * and international formats like "123 Street, Suburb, City, Country".
+ */
+export function extractCity(address: string): string {
+  if (!address) return "";
+  const parts = address.split(",").map((p) => p.trim());
+  // Standard US/CA format: "Street, City, State ZIP, Country" → index 1
+  if (parts.length >= 3) return parts[1];
+  return "";
+}
+
+/**
  * Parses Google Takeout GeoJSON review data into SpotCheck Review format.
  * Attempts to auto-categorize based on business name keywords.
  */
@@ -46,6 +59,7 @@ function featureToReview(feature: GoogleTakeoutFeature): Review {
     id: uuidv4(),
     placeName,
     address,
+    city: extractCity(address),
     category: guessCategory(placeName, reviewText),
     rating,
     reviewText,
