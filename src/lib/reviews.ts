@@ -42,7 +42,11 @@ export function filterReviews(
 
   if (options.city && options.city !== "all") {
     if (options.city === "Global") {
-      filtered = filtered.filter((r) => !r.country || !isUsOrCanada(r.country));
+      // Matches exactly what HomeClient counts as Global:
+      // any review that lacks country, lacks city, or is outside US/CA
+      filtered = filtered.filter(
+        (r) => !r.country || !r.city || !isUsOrCanada(r.country)
+      );
     } else {
       filtered = filtered.filter((r) => r.city === options.city);
     }

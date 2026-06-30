@@ -15,18 +15,54 @@ export function isUsOrCanada(country: string): boolean {
   return US_CA_COUNTRIES.has(country);
 }
 
+// US state abbreviations — last part of a 3-part address like "City, ST ZIP"
+const US_STATE_ABBREVS = new Set([
+  "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
+  "KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
+  "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT",
+  "VA","WA","WV","WI","WY","DC",
+]);
+
+// Canadian province abbreviations
+const CA_PROVINCE_ABBREVS = new Set([
+  "AB","BC","MB","NB","NL","NS","NT","NU","ON","PE","QC","SK","YT",
+]);
+
 /**
  * Extracts city and country from a standard address string.
- * Handles formats like "123 Main St, Seattle, WA 98101, United States".
+ * Handles:
+ *   "123 Main St, Seattle, WA 98101, United States"  → Seattle / United States
+ *   "123 St, Vancouver, BC V1A 2B3, Canada"          → Vancouver / Canada
+ *   "123 St, City, CA"  (short US format)            → City / United States
+ *   "123 St, City, State"  (no country suffix)        → City / inferred
  */
 export function extractLocation(address: string): { city: string; country: string } {
   if (!address) return { city: "", country: "" };
   const parts = address.split(",").map((p) => p.trim());
-  const country = parts.length >= 1 ? parts[parts.length - 1] : "";
-  // Normalize "USA" → "United States"
-  const normalizedCountry = country === "USA" || country === "US" ? "United States" : country;
-  const city = parts.length >= 3 ? parts[1] : "";
-  return { city, country: normalizedCountry };
+  if (parts.length < 2) return { city: "", country: "" };
+
+  const last = parts[parts.length - 1];
+  // Normalize known aliases
+  const normalized =
+    last === "USA" || last === "US" ? "United States" : last;
+
+  // Full address with explicit country: "Street, City, State ZIP, Country"
+  if (parts.length >= 4 && !US_STATE_ABBREVS.has(last) && !CA_PROVINCE_ABBREVS.has(last)) {
+    return { city: parts[1], country: normalized };
+  }
+
+  // Short format where last part is a state/province abbreviation (no country suffix)
+  // e.g. "Street, City, CA" or "Street, City, WA 98101"
+  const stateToken = last.split(" ")[0]; // handle "WA 98101" → "WA"
+  if (US_STATE_ABBREVS.has(stateToken)) {
+    return { city: parts[1], country: "United States" };
+  }
+  if (CA_PROVINCE_ABBREVS.has(stateToken)) {
+    return { city: parts[1], country: "Canada" };
+  }
+
+  // Fallback: treat last part as country, second part as city
+  return { city: parts.length >= 3 ? parts[1] : "", country: normalized };
 }
 
 /**

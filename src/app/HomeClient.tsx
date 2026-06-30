@@ -27,7 +27,8 @@ export default function HomeClient({ reviews }: HomeClientProps) {
     const counts: Record<string, number> = {};
     let globalCount = 0;
     for (const r of reviews) {
-      if (r.country && isUsOrCanada(r.country) && r.city) {
+      // "Global" is a reserved filter value — never use it as a real city name
+      if (r.country && isUsOrCanada(r.country) && r.city && r.city !== "Global") {
         counts[r.city] = (counts[r.city] ?? 0) + 1;
       } else {
         globalCount++;
