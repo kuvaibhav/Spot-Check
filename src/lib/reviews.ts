@@ -1,9 +1,10 @@
 import { Review, ReviewsData, Category } from "./types";
+import { isUsOrCanada } from "./import-google";
 import sampleData from "@/data/sample-reviews.json";
 
 const USE_S3 = !!(
-  process.env.AWS_ACCESS_KEY_ID &&
-  process.env.AWS_ACCESS_KEY_ID !== "your-access-key-id"
+  process.env.R2_ACCESS_KEY_ID &&
+  process.env.R2_ACCESS_KEY_ID !== "your-r2-access-key"
 );
 
 export async function getReviews(): Promise<ReviewsData> {
@@ -27,6 +28,7 @@ export function filterReviews(
   reviews: Review[],
   options: {
     category?: Category | "all";
+    city?: string;
     search?: string;
     sortBy?: "date" | "rating" | "name";
     sortOrder?: "asc" | "desc";
@@ -38,6 +40,18 @@ export function filterReviews(
     filtered = filtered.filter((r) => r.category === options.category);
   }
 
+  if (options.city && options.city !== "all") {
+    if (options.city === "Global") {
+      // Matches exactly what HomeClient counts as Global:
+      // any review that lacks country, lacks city, or is outside US/CA
+      filtered = filtered.filter(
+        (r) => !r.country || !r.city || !isUsOrCanada(r.country)
+      );
+    } else {
+      filtered = filtered.filter((r) => r.city === options.city);
+    }
+  }
+
   if (options.search) {
     const q = options.search.toLowerCase();
     filtered = filtered.filter(
@@ -45,6 +59,7 @@ export function filterReviews(
         r.placeName.toLowerCase().includes(q) ||
         r.reviewText.toLowerCase().includes(q) ||
         r.address.toLowerCase().includes(q) ||
+        (r.city ?? "").toLowerCase().includes(q) ||
         r.tags.some((t) => t.toLowerCase().includes(q))
     );
   }

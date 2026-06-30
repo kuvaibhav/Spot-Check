@@ -29,13 +29,15 @@ export interface Review {
   id: string;
   placeName: string;
   address: string;
+  city?: string;    // extracted from address, e.g. "Seattle"
+  country?: string; // extracted from address, e.g. "United States"
   category: Category;
   rating: number; // 1-5
   reviewText: string;
   visitDate: string; // ISO date string
   createdAt: string;
   updatedAt: string;
-  images: string[]; // S3 URLs
+  images: string[]; // R2 URLs
   coordinates?: {
     lat: number;
     lng: number;
