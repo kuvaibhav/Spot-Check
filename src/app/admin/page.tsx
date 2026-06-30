@@ -255,25 +255,25 @@ export default function AdminPage() {
       <Header />
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-8 w-full">
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">Admin Panel</h1>
+            <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight">Admin Panel</h1>
             <p className="mt-1 text-stone-500 text-sm">Create, import, and manage your reviews.</p>
           </div>
-          <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-600 transition-colors">
+          <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-600 transition-colors py-2 px-3 -mr-1 min-h-[44px]">
             <LogOut className="w-4 h-4" /> Sign Out
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="mt-6 flex gap-1 bg-stone-100 p-1 rounded-xl w-fit">
+        <div className="mt-6 flex gap-1 bg-stone-100 p-1 rounded-xl w-full sm:w-fit">
           {(["create", "import", "manage"] as Tab[]).map((t) => (
             <button key={t} onClick={() => setTab(t)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all capitalize ${tab === t ? "bg-white text-stone-900 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all capitalize min-h-[44px] ${tab === t ? "bg-white text-stone-900 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}
             >
-              {t === "create" && <Plus className="w-4 h-4 inline mr-1" />}
-              {t === "import" && <FileJson className="w-4 h-4 inline mr-1" />}
-              {t === "manage" && <Pencil className="w-4 h-4 inline mr-1" />}
+              {t === "create" && <Plus className="w-4 h-4" />}
+              {t === "import" && <FileJson className="w-4 h-4" />}
+              {t === "manage" && <Pencil className="w-4 h-4" />}
               {t}
             </button>
           ))}
@@ -369,7 +369,7 @@ export default function AdminPage() {
             </div>
 
             <button type="submit" disabled={loading}
-              className="flex items-center gap-2 bg-brand-500 text-white px-6 py-2.5 rounded-lg font-medium text-sm hover:bg-brand-600 transition-colors disabled:opacity-50">
+              className="flex items-center gap-2 bg-brand-500 text-white px-6 py-3 rounded-lg font-medium text-sm hover:bg-brand-600 transition-colors disabled:opacity-50 min-h-[44px]">
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Review
             </button>
@@ -439,7 +439,7 @@ export default function AdminPage() {
                         </div>
                         {isOpen ? <ChevronUp className="w-4 h-4 text-stone-400 shrink-0" /> : <ChevronDown className="w-4 h-4 text-stone-400 shrink-0" />}
                       </button>
-                      <button onClick={() => handleDelete(review.id)} className="ml-3 p-2 text-stone-300 hover:text-red-500 transition-colors">
+                      <button onClick={() => handleDelete(review.id)} className="ml-3 p-3 text-stone-300 hover:text-red-500 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -462,7 +462,7 @@ export default function AdminPage() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                           <div>
                             <label className="block text-xs font-medium text-stone-600 mb-1">Category</label>
                             <select value={ef.category} onChange={(e) => updateEditForm(review.id, { category: e.target.value as Category })}
@@ -527,12 +527,12 @@ export default function AdminPage() {
 
                         <div className="flex items-center gap-3 pt-1">
                           <button type="button" onClick={() => handleSaveEdit(review.id)} disabled={savingId === review.id}
-                            className="flex items-center gap-2 bg-brand-500 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors disabled:opacity-50">
+                            className="flex items-center gap-2 bg-brand-500 text-white px-5 py-3 rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors disabled:opacity-50 min-h-[44px]">
                             {savingId === review.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                             Save Changes
                           </button>
                           <button type="button" onClick={closeEdit}
-                            className="text-sm text-stone-400 hover:text-stone-600 transition-colors">
+                            className="text-sm text-stone-400 hover:text-stone-600 transition-colors py-3 px-2 min-h-[44px]">
                             Cancel
                           </button>
                         </div>

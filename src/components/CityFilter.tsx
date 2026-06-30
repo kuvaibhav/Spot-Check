@@ -19,7 +19,7 @@ export default function CityFilter({ cities, selected, onChange }: CityFilterPro
       <select
         value={selected}
         onChange={(e) => onChange(e.target.value)}
-        className="text-sm bg-white border border-stone-200 rounded-lg px-3 py-2 text-stone-600 focus:outline-none focus:ring-2 focus:ring-brand-500/20 min-w-[160px]"
+        className="text-sm bg-white border border-stone-200 rounded-lg px-3 py-2.5 text-stone-600 focus:outline-none focus:ring-2 focus:ring-brand-500/20 min-w-[140px] max-w-full"
       >
         <option value="all">All cities ({total})</option>
         {usCaCities.map(({ city, count }) => (
