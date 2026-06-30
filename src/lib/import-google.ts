@@ -6,17 +6,35 @@ import {
   GoogleTakeoutFeature,
 } from "./types";
 
+const US_CA_COUNTRIES = new Set(["United States", "USA", "US", "Canada"]);
+
+/**
+ * Returns true if the address is in the US or Canada.
+ */
+export function isUsOrCanada(country: string): boolean {
+  return US_CA_COUNTRIES.has(country);
+}
+
+/**
+ * Extracts city and country from a standard address string.
+ * Handles formats like "123 Main St, Seattle, WA 98101, United States".
+ */
+export function extractLocation(address: string): { city: string; country: string } {
+  if (!address) return { city: "", country: "" };
+  const parts = address.split(",").map((p) => p.trim());
+  const country = parts.length >= 1 ? parts[parts.length - 1] : "";
+  // Normalize "USA" → "United States"
+  const normalizedCountry = country === "USA" || country === "US" ? "United States" : country;
+  const city = parts.length >= 3 ? parts[1] : "";
+  return { city, country: normalizedCountry };
+}
+
 /**
  * Extracts the city from a standard address string.
- * Handles formats like "123 Main St, Seattle, WA 98101, United States"
- * and international formats like "123 Street, Suburb, City, Country".
+ * @deprecated Use extractLocation() instead.
  */
 export function extractCity(address: string): string {
-  if (!address) return "";
-  const parts = address.split(",").map((p) => p.trim());
-  // Standard US/CA format: "Street, City, State ZIP, Country" → index 1
-  if (parts.length >= 3) return parts[1];
-  return "";
+  return extractLocation(address).city;
 }
 
 /**
@@ -55,11 +73,14 @@ function featureToReview(feature: GoogleTakeoutFeature): Review {
     }
   }
 
+  const { city, country } = extractLocation(address);
+
   return {
     id: uuidv4(),
     placeName,
     address,
-    city: extractCity(address),
+    city,
+    country,
     category: guessCategory(placeName, reviewText),
     rating,
     reviewText,

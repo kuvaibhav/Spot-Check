@@ -29,7 +29,8 @@ export interface Review {
   id: string;
   placeName: string;
   address: string;
-  city?: string; // extracted from address, e.g. "Seattle"
+  city?: string;    // extracted from address, e.g. "Seattle"
+  country?: string; // extracted from address, e.g. "United States"
   category: Category;
   rating: number; // 1-5
   reviewText: string;

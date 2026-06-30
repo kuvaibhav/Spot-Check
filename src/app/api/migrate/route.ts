@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { getReviews, saveReviews } from "@/lib/reviews";
-import { extractCity } from "@/lib/import-google";
+import { extractLocation } from "@/lib/import-google";
 
 /**
  * POST /api/migrate
- * One-time migration to backfill the city field on all existing reviews
- * that were imported before city extraction was added.
+ * Backfills city and country fields on all existing reviews.
+ * Safe to re-run — only updates reviews missing either field.
  */
 export async function POST() {
   try {
@@ -13,11 +13,11 @@ export async function POST() {
     let updated = 0;
 
     data.reviews = data.reviews.map((review) => {
-      if (!review.city && review.address) {
-        const city = extractCity(review.address);
-        if (city) {
+      if ((!review.city || !review.country) && review.address) {
+        const { city, country } = extractLocation(review.address);
+        if (city || country) {
           updated++;
-          return { ...review, city };
+          return { ...review, city: city || review.city, country: country || review.country };
         }
       }
       return review;

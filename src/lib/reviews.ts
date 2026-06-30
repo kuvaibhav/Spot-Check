@@ -1,4 +1,5 @@
 import { Review, ReviewsData, Category } from "./types";
+import { isUsOrCanada } from "./import-google";
 import sampleData from "@/data/sample-reviews.json";
 
 const USE_S3 = !!(
@@ -40,7 +41,11 @@ export function filterReviews(
   }
 
   if (options.city && options.city !== "all") {
-    filtered = filtered.filter((r) => r.city === options.city);
+    if (options.city === "Global") {
+      filtered = filtered.filter((r) => !r.country || !isUsOrCanada(r.country));
+    } else {
+      filtered = filtered.filter((r) => r.city === options.city);
+    }
   }
 
   if (options.search) {

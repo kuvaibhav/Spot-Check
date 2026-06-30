@@ -9,6 +9,7 @@ import ReviewCard from "@/components/ReviewCard";
 import CategoryFilter from "@/components/CategoryFilter";
 import CityFilter from "@/components/CityFilter";
 import SearchBar from "@/components/SearchBar";
+import { isUsOrCanada } from "@/lib/import-google";
 import { SlidersHorizontal } from "lucide-react";
 
 interface HomeClientProps {
@@ -21,15 +22,22 @@ export default function HomeClient({ reviews }: HomeClientProps) {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "rating" | "name">("date");
 
-  // Build sorted city list with counts (exclude empty city values)
+  // US/CA cities listed individually; everything else grouped as "Global"
   const cityOptions = useMemo(() => {
     const counts: Record<string, number> = {};
+    let globalCount = 0;
     for (const r of reviews) {
-      if (r.city) counts[r.city] = (counts[r.city] ?? 0) + 1;
+      if (r.country && isUsOrCanada(r.country) && r.city) {
+        counts[r.city] = (counts[r.city] ?? 0) + 1;
+      } else {
+        globalCount++;
+      }
     }
-    return Object.entries(counts)
+    const cities = Object.entries(counts)
       .sort((a, b) => b[1] - a[1])
       .map(([c, count]) => ({ city: c, count }));
+    if (globalCount > 0) cities.push({ city: "Global", count: globalCount });
+    return cities;
   }, [reviews]);
 
   const filtered = useMemo(
