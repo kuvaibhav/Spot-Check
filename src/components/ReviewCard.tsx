@@ -37,13 +37,13 @@ export default function ReviewCard({ review }: ReviewCardProps) {
         )}
 
         {/* Category badge */}
-        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-medium px-2.5 py-1 rounded-full text-stone-700">
+        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-medium px-2.5 py-1 rounded-full text-stone-700 max-w-[45%] truncate">
           {categoryLabel}
         </span>
 
         {/* Source badge */}
         {review.source !== "manual" && (
-          <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs font-medium px-2.5 py-1 rounded-full text-stone-500 capitalize">
+          <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs font-medium px-2.5 py-1 rounded-full text-stone-500 capitalize max-w-[45%] truncate">
             {review.source}
           </span>
         )}
@@ -70,7 +70,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
           </p>
         )}
 
-        <div className="mt-3 flex items-center gap-4 text-xs text-stone-400">
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-stone-400">
           <span className="flex items-center gap-1">
             <Calendar className="w-3 h-3" />
             {visitDate}

@@ -56,6 +56,51 @@ export async function POST(req: NextRequest) {
   }
 }
 
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+    if (!body.id) {
+      return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    }
+
+    const data = await getReviews();
+    const index = data.reviews.findIndex((r) => r.id === body.id);
+
+    if (index === -1) {
+      return NextResponse.json({ error: "Review not found" }, { status: 404 });
+    }
+
+    const updated: Review = {
+      ...data.reviews[index],
+      placeName: body.placeName ?? data.reviews[index].placeName,
+      address: body.address ?? data.reviews[index].address,
+      category: body.category ?? data.reviews[index].category,
+      rating: body.rating ?? data.reviews[index].rating,
+      reviewText: body.reviewText ?? data.reviews[index].reviewText,
+      visitDate: body.visitDate
+        ? new Date(body.visitDate).toISOString()
+        : data.reviews[index].visitDate,
+      images: body.images ?? data.reviews[index].images,
+      tags: body.tags ?? data.reviews[index].tags,
+      priceRange: body.priceRange ?? data.reviews[index].priceRange,
+      wouldReturn: body.wouldReturn ?? data.reviews[index].wouldReturn,
+      updatedAt: new Date().toISOString(),
+    };
+
+    data.reviews[index] = updated;
+    data.lastUpdated = new Date().toISOString();
+    await saveReviews(data);
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("Failed to update review:", error);
+    return NextResponse.json(
+      { error: "Failed to update review" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);

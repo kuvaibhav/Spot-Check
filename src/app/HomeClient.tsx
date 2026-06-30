@@ -74,7 +74,7 @@ export default function HomeClient({ reviews }: HomeClientProps) {
           </p>
 
           {/* Stats */}
-          <div className="mt-8 flex gap-8">
+          <div className="mt-8 flex flex-wrap gap-8">
             <div>
               <p className="text-2xl font-bold text-stone-900">{stats.total}</p>
               <p className="text-xs text-stone-400 uppercase tracking-wide">Reviews</p>
@@ -97,14 +97,14 @@ export default function HomeClient({ reviews }: HomeClientProps) {
           <div className="w-full sm:w-72">
             <SearchBar value={search} onChange={setSearch} />
           </div>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-start gap-3 flex-wrap">
             <CityFilter cities={cityOptions} selected={city} onChange={setCity} />
             <div className="flex items-center gap-2">
-              <SlidersHorizontal className="w-4 h-4 text-stone-400" />
+              <SlidersHorizontal className="w-4 h-4 text-stone-400 shrink-0" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as "date" | "rating" | "name")}
-                className="text-sm bg-white border border-stone-200 rounded-lg px-3 py-2 text-stone-600 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                className="text-sm bg-white border border-stone-200 rounded-lg px-3 py-2.5 text-stone-600 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
               >
                 <option value="date">Newest First</option>
                 <option value="rating">Highest Rated</option>

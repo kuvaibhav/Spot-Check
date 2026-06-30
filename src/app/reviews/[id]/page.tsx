@@ -47,9 +47,9 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
         {/* Back link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-600 transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-600 transition-colors mb-6 py-2 -ml-1 px-1 min-h-[44px]"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 shrink-0" />
           Back to reviews
         </Link>
 
@@ -92,9 +92,9 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
           {review.placeName}
         </h1>
 
-        <div className="flex items-center gap-2 mt-2 text-stone-500 text-sm">
-          <MapPin className="w-4 h-4 text-stone-400" />
-          {review.address}
+        <div className="flex items-start gap-2 mt-2 text-stone-500 text-sm">
+          <MapPin className="w-4 h-4 text-stone-400 mt-0.5 shrink-0" />
+          <span className="break-words min-w-0">{review.address}</span>
         </div>
 
         {/* Rating & meta */}
@@ -130,7 +130,7 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
 
         {/* Review text */}
         <div className="mt-8 prose prose-stone max-w-none">
-          <p className="text-stone-700 leading-relaxed text-lg whitespace-pre-wrap">
+          <p className="text-stone-700 leading-relaxed text-base sm:text-lg whitespace-pre-wrap break-words">
             {review.reviewText}
           </p>
         </div>

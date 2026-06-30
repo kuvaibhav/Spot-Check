@@ -41,7 +41,7 @@ export default function Header() {
             </Link>
             <Link
               href="/admin"
-              className="text-sm font-medium bg-brand-500 text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors"
+              className="text-sm font-medium bg-brand-500 text-white px-4 py-2.5 rounded-lg hover:bg-brand-600 transition-colors"
             >
               Admin
             </Link>
@@ -49,8 +49,9 @@ export default function Header() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 text-stone-600"
+            className="md:hidden p-3 -mr-1 text-stone-600 min-w-[44px] min-h-[44px] flex items-center justify-center"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -58,35 +59,37 @@ export default function Header() {
 
         {/* Mobile Nav */}
         {menuOpen && (
-          <nav className="md:hidden pb-4 flex flex-col gap-3">
+          <nav className="md:hidden pb-3 flex flex-col">
             <Link
               href="/"
-              className="text-sm font-medium text-stone-600 hover:text-stone-900 py-2"
+              className="text-sm font-medium text-stone-600 hover:text-stone-900 min-h-[44px] flex items-center border-b border-stone-100"
               onClick={() => setMenuOpen(false)}
             >
               Reviews
             </Link>
             <Link
               href="/categories"
-              className="text-sm font-medium text-stone-600 hover:text-stone-900 py-2"
+              className="text-sm font-medium text-stone-600 hover:text-stone-900 min-h-[44px] flex items-center border-b border-stone-100"
               onClick={() => setMenuOpen(false)}
             >
               Categories
             </Link>
             <Link
               href="/about"
-              className="text-sm font-medium text-stone-600 hover:text-stone-900 py-2"
+              className="text-sm font-medium text-stone-600 hover:text-stone-900 min-h-[44px] flex items-center border-b border-stone-100"
               onClick={() => setMenuOpen(false)}
             >
               About
             </Link>
-            <Link
-              href="/admin"
-              className="text-sm font-medium bg-brand-500 text-white px-4 py-2 rounded-lg text-center"
-              onClick={() => setMenuOpen(false)}
-            >
-              Admin
-            </Link>
+            <div className="pt-3">
+              <Link
+                href="/admin"
+                className="text-sm font-medium bg-brand-500 text-white px-4 py-3 rounded-lg text-center block"
+                onClick={() => setMenuOpen(false)}
+              >
+                Admin
+              </Link>
+            </div>
           </nav>
         )}
       </div>
